@@ -1,4 +1,8 @@
-const request = require('request');
+const axios = require('axios');
+
+// Define the URL of the Star Wars API and the movie ID based on the user's input
+const baseUrl = 'https://swapi.dev/api/';
+
 
 // Define the URL of the Star Wars API and the movie ID based on the user's input
 const baseUrl = 'https://swapi.dev/api/';
