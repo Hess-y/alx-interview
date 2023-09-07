@@ -12,7 +12,7 @@ if (!movieId) {
 // Define a function to fetch and print characters for a given movie
 function getCharactersForMovie(movieId) {
   const movieUrl = `${baseUrl}/films/${movieId}/`;
-  
+
   request(movieUrl, (error, response, body) => {
     if (error) {
       console.error('Error:', error);
@@ -28,7 +28,7 @@ function getCharactersForMovie(movieId) {
     const characters = movieData.characters;
 
     console.log(`Characters in the movie "${movieData.title}":`);
-    
+
     // Fetch and print each character's name
     characters.forEach((characterUrl) => {
       request(characterUrl, (charError, charResponse, charBody) => {
