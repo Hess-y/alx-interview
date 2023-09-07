@@ -1,58 +1,23 @@
-const axios = require('axios');
+#!/usr/bin/node
 
-// Define the URL of the Star Wars API and the movie ID based on the user's input
-const baseUrl = 'https://swapi.dev/api/';
+const request = require('request');
 
+const movieId = process.argv[2];
 
-// Define the URL of the Star Wars API and the movie ID based on the user's input
-const baseUrl = 'https://swapi.dev/api/';
-const movieId = process.argv[2]; // Get the movie ID from the command line arguments
+const url = `https://swapi-api.hbtn.io/api/films/${movieId}`;
 
-if (!movieId) {
-  console.error('Please provide a movie ID as the first argument.');
-  process.exit(1);
-}
+request(url, async (err, res, body) => {
+  err && console.log(err);
 
-// Define a function to fetch and print characters for a given movie
-function getCharactersForMovie(movieId) {
-  const movieUrl = `${baseUrl}/films/${movieId}/`;
+  const charactersArray = (JSON.parse(res.body).characters);
+  for (const character of charactersArray) {
+    await new Promise((resolve, reject) => {
+      request(character, (err, res, body) => {
+        err && console.log(err);
 
-  request(movieUrl, (error, response, body) => {
-    if (error) {
-      console.error('Error:', error);
-      return;
-    }
-
-    if (response.statusCode !== 200) {
-      console.error(`Error: Status code ${response.statusCode}`);
-      return;
-    }
-
-    const movieData = JSON.parse(body);
-    const characters = movieData.characters;
-
-    console.log(`Characters in the movie "${movieData.title}":`);
-
-    // Fetch and print each character's name
-    characters.forEach((characterUrl) => {
-      request(characterUrl, (charError, charResponse, charBody) => {
-        if (charError) {
-          console.error('Error:', charError);
-          return;
-        }
-
-        if (charResponse.statusCode !== 200) {
-          console.error(`Error: Status code ${charResponse.statusCode}`);
-          return;
-        }
-
-        const characterData = JSON.parse(charBody);
-        console.log(characterData.name);
+        console.log(JSON.parse(body).name);
+        resolve();
       });
     });
-  });
-}
-
-// Call the function to fetch and print characters for the specified movie
-getCharactersForMovie(movieId);
-
+  }
+});
